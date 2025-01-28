@@ -1,8 +1,8 @@
-`use strict`;
+'use strict';
  
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
  
- export const dbConnection = async () => {
+export const dbConnection = async () => {
     try {
         mongoose.connection.on('error', ()=>{
             console.log('MongoDB | Could not be connected to MongoDB');
@@ -12,7 +12,7 @@ import mongoose from "mongoose";
             console.log('MongoDB | Try connecting...');
         });
         mongoose.connection.on('connected', ()=>{
-            console.log(`MongoDB | Connected to MongoDB`);
+            console.log('MongoDB | Connected to MongoDB');
         });
         mongoose.connection.on('open', ()=>{
             console.log('MongoDB | Connected to database');
