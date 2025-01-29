@@ -19,10 +19,10 @@ router.post(
 router.post(
     '/register',
     [
-        check('name', 'Name is required!').not().isEmpty(),
+        check('nombre', 'Name is required!').not().isEmpty(),
         check('password', 'The password must be longer than 6 characters!').isLength({ min: 6 }),
-        check('email', 'Email not valid!').isEmail(),
-        check('email').custom(existenteEmail),
+        check('correo', 'Email not valid!').isEmail(),
+        check('correo').custom(existenteEmail),
         check('role').custom(esRoleValido),
         check('phone', 'The number must be longer than 6 characters!').isLength({ min: 8, max: 8 }),
         validarCampos,

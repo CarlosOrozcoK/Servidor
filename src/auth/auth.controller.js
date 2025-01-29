@@ -4,11 +4,11 @@ import { generarJWT } from '../helpers/generate-jwt.js';
  
 export const login = async (req, res) => {
    
-    const { email, password } = req.body;
+    const { correo, password } = req.body;
  
     try {
        
-        const usuario = await Usuario.findOne({email});
+        const usuario = await Usuario.findOne({correo});
  
         if (!usuario) {
             return res.status(400).json({
@@ -47,8 +47,8 @@ export const login = async (req, res) => {
  
 export const register = async (req, res) => {
  
-    const { name, email, password, role, phone } = req.body;
-    const user = new Usuario({ name, email, password, role, phone });
+    const { nombre, correo, password, role, phone } = req.body;
+    const user = new Usuario({ nombre, correo, password, role, phone });
  
     const salt = bcryptjs.genSaltSync();
     user.password = bcryptjs.hashSync(password, salt);
