@@ -9,10 +9,11 @@ export const esRoleValido = async (role = ' ') => {
     }
 }
  
-export const existenteEmail = async (correo = ' ') => {
-    const existeEmail = await User.findOne({ correo });
+export const existenteEmail = async (email = ' ') => {
+    const existeEmail = await User.findOne({ email });
  
     if (existeEmail) {
-        throw new Error(`Email ${ correo } exists in the database!`);
+        throw new Error(`Email ${ email } exists in the database!`);
     }
 }
+ 

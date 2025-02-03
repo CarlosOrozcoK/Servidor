@@ -32,7 +32,11 @@ const conectarDB = async () =>{
         process.exit(1);
     }
 }
- 
+
+export const initServer = async =>{
+    const app = express();
+    
+}
 export const iniciarServidor = async () =>{
     const app = express();
     const port = process.env.PORT || 3000;
