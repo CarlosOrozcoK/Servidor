@@ -4,7 +4,7 @@ import { generarJWT} from '../helpers/generate-jwt.js';
 
 export const login = async (req, res) => {
 
-    const { correo, password, username } = req.body;
+    const { email, password, username } = req.body;
 
     try {
         

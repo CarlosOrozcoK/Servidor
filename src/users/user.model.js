@@ -58,3 +58,4 @@ UserSchema.methods.toJSON = function () {
 }
 
 export default model('User', UserSchema);
+

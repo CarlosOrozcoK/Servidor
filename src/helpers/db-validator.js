@@ -16,4 +16,12 @@ export const existenteEmail = async (email = ' ') => {
         throw new Error(`Email ${ email } exists in the database!`);
     }
 }
+
+export const existeUsuarioById = async (id = '') => {
+    const existeUsuario = await User.findById(id);
+
+    if(!existeUsuario){
+        throw new Error (`El ID ${id} no existe`);
+    }
+}
  
