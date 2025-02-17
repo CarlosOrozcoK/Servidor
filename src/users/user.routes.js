@@ -27,9 +27,19 @@ router.put (
         check ("id").custom(existeUsuarioById), 
         validarCampos
     ],
-    updateUser
-
+    updateUser,
 )
+
+router.put(
+    "/:id",
+    [
+        check("id", "id invalid!").isMongoId(),
+        check("id").custom(existeUsuarioById),
+        validarCampos
+    ],
+    updatePassword,
+)
+
 router.delete(
     "/:id",
     [
