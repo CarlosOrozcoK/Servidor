@@ -10,42 +10,42 @@ router.post(
     "/",
     [
         validarJWT,
-        check('email', 'Email invalid!').not().isEmpty(),
-        check('id', 'Id invalid!').not().isEmpty(),
+        check("email", "Email is required!").notEmpty(),
+        check("id", "ID is required!").notEmpty(),
         validarCampos
     ],
     saveDate
-)
+);
 
-router.get("/", getDates)
+router.get("/", getDates);
 
 router.get(
     "/:id",
     [
         validarJWT,
-        check("id", "ID invalid!").isMongoId(),
+        check("id", "Invalid ID format!").isMongoId(),
         validarCampos
     ],
     searchDate
-)
+);
 
 router.put(
     "/:id",
     [
-        check("id", "ID invalid!").isMongoId(),
+        check("id", "Invalid ID format!").isMongoId(),
         validarCampos
     ],
     updateDate
-)
+);
 
 router.delete(
     "/:id",
     [
         validarJWT,
-        check("id", "ID invalid!").isMongoId(),
+        check("id", "Invalid ID format!").isMongoId(),
         validarCampos
     ],
     deleteDate
-)
+);
 
 export default router;

@@ -1,144 +1,89 @@
 import User from "../users/user.model.js";
 import Pet from "../pet/pet.model.js";
-import Date from "../date/date.model.js";
+import DateModel from "../date/date.model.js";
 
 export const saveDate = async (req, res) => {
     try {
-        const data = req.body;
-        const user = await User.findOne({ email: data.email });
-        const pet = await Pet.findOne({ name: data.name });
+        const { email, name, ...rest } = req.body;
+        
+        const user = await User.findOne({ email });
+        const pet = await Pet.findOne({ name });
 
         if (!user || !pet) {
             return res.status(404).json({
                 success: false,
-                message: 'Owner or Pet dont found!'
-            })
+                message: "Owner or Pet not found!"
+            });
         }
 
-        const date = new Date({
-            ...data,
+        const date = new DateModel({
+            ...rest,
             keeper: user._id,
             pet: pet._id
         });
 
         await date.save();
 
-        res.status(200).json({
-            success: true,
-            date
-        })
+        res.status(201).json({ success: true, date });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: 'Error saving date!',
-            error
-        })
+        res.status(500).json({ success: false, message: "Error saving date!", error });
     }
-}
+};
 
 export const getDates = async (req, res) => {
-    const { limite = 10, desde = 0 } = req.query;
-    const query = { status: true };
-
     try {
-        const dates = await Date.find(query)
-            .skip(Number(desde))
-            .limit(Number(limite));
+        const { limite = 10, desde = 0 } = req.query;
+        const query = { status: true };
 
-        const datesWithOwnerNames = await Promise.all(dates.map(async (date) => {
+        const [dates, total] = await Promise.all([
+            DateModel.find(query).skip(Number(desde)).limit(Number(limite)),
+            DateModel.countDocuments(query)
+        ]);
 
-            return {
-                ...date.toObject()
-            };
-        }));
-
-        const total = await Date.countDocuments(query);
-
-        res.status(200).json({
-            success: true,
-            total,
-            dates: datesWithOwnerNames
-        });
-
+        res.status(200).json({ success: true, total, dates });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: 'Error getting dates!',
-            error
-        });
+        res.status(500).json({ success: false, message: "Error getting dates!", error });
     }
-}
+};
 
 export const searchDate = async (req, res) => {
-    const { id } = req.params;
-
     try {
-        const date = await Date.findById(id);
+        const date = await DateModel.findById(req.params.id);
 
         if (!date) {
-            return res.status(404).json({
-                success: false,
-                message: 'Date dont found!'
-            })
+            return res.status(404).json({ success: false, message: "Date not found!" });
         }
 
-        res.status(200).json({
-            success: true,
-            date: {
-                ...date.toObject()
-            }
-        })
-
+        res.status(200).json({ success: true, date });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: 'Error searching date!',
-            error
-        })
+        res.status(500).json({ success: false, message: "Error searching date!", error });
     }
-}
+};
 
-export const updateDate = async (req, res = response) => {
+export const updateDate = async (req, res) => {
     try {
-        
-        const { id } = req.params;
-        const data = req.body;
+        const updatedDate = await DateModel.findByIdAndUpdate(req.params.id, req.body, { new: true });
 
-        const date = await Date.findByIdAndUpdate(id, data, { new: true });
+        if (!updatedDate) {
+            return res.status(404).json({ success: false, message: "Date not found!" });
+        }
 
-        res.status(200).json({
-            success: true,
-            msg: 'Date update!',
-            date
-        })
-
+        res.status(200).json({ success: true, message: "Date updated!", date: updatedDate });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            msg: 'Error update!',
-            error
-        })
+        res.status(500).json({ success: false, message: "Error updating date!", error });
     }
-}
+};
 
 export const deleteDate = async (req, res) => {
-    
-    const { id } = req.params;
-
     try {
-
-        await Date.findByIdAndUpdate(id, { status: false });
-
-        res.status(200).json({
-            success: true,
-            message: 'Date delete success!'
-        })
+        const date = await DateModel.findByIdAndUpdate(req.params.id, { status: false });
         
+        if (!date) {
+            return res.status(404).json({ success: false, message: "Date not found!" });
+        }
+
+        res.status(200).json({ success: true, message: "Date deleted successfully!" });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: 'Error deleting date!',
-            error
-        })
+        res.status(500).json({ success: false, message: "Error deleting date!", error });
     }
-}
+};
